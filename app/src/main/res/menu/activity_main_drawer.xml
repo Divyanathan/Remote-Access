@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/contact"
+            android:icon="@drawable/contactsicon"
+
+            android:title="Contacts" />
+        <item
+            android:id="@+id/missedcall"
+            android:icon="@drawable/misscall"
+            android:title="Missed Calls" />
+        <item
+            android:id="@+id/incomecall"
+            android:icon="@drawable/income"
+            android:title="Incomming Calls" />
+        <item
+            android:id="@+id/outgoing"
+            android:icon="@drawable/outgoing"
+            android:title="Outgoing calls" />
+        <item
+            android:id="@+id/inbox"
+            android:icon="@drawable/inbox"
+            android:title="Inbox" />
+        <item
+            android:id="@+id/sent"
+            android:icon="@drawable/sent"
+            android:title="Sent" />
+        <item
+            android:id="@+id/changepass"
+            android:icon="@drawable/password"
+            android:title="change password" />
+        <item
+            android:id="@+id/phonenumber"
+            android:icon="@drawable/phonenumber"
+
+            android:title="Change phone Number" />
+
+    </group>
+
+    <!--<item android:title="Communicate">
+        <menu>
+            <item
+                android:id="@+id/nav_share"
+                android:title="Share" />
+            <item
+                android:id="@+id/nav_send"
+                android:title="Send" />
+        </menu>
+    </item>-->
+
+</menu>
