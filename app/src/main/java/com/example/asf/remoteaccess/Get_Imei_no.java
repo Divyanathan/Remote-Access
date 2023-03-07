@@ -30,14 +30,6 @@ public class Get_Imei_no extends AppCompatActivity {
         String value="Phone No:"+no+"\n"+"IMEI no:"+imei+"\n"+"Serial no:"+serial;
         SendSMS(num,value);
         Toast.makeText(Get_Imei_no.this, "Hello\n", Toast.LENGTH_SHORT).show();
-       /* if (serial.equals("89910341110447422162"))
-        {
-            SendSMS(num,"it's ur number");
-        }
-        else {
-            String value1 = "Phone No:" + no + "\n" + "IMEI no:" + imei + "\n" + "Serial no:" + serial;
-            SendSMS(num, value);
-        }*/
     }
     public  void SendSMS(String phoneNumber,String msg)
     {

@@ -91,12 +91,12 @@ public class SentSms extends AppCompatActivity {
     private void ensurePermissions() {
 
         if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.READ_SMS)
+                Manifest.permission.RECEIVE_SMS)
                 != PackageManager.PERMISSION_GRANTED) {
 
             // Should we show an explanation?
             if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.READ_SMS)) {
+                    Manifest.permission.RECEIVE_SMS)) {
 
                 // Show an explanation to the user *asynchronously* -- don't block
                 // this thread waiting for the user's response! After the user
@@ -107,7 +107,7 @@ public class SentSms extends AppCompatActivity {
                 // No explanation needed, we can request the permission.
 
                 ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.READ_SMS},
+                        new String[]{Manifest.permission.RECEIVE_SMS},
                         MY_PERMISSIONS_REQUEST_READ_CONTACT);
 
                 // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an

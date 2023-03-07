@@ -86,13 +86,7 @@ public class Get_Contact extends AppCompatActivity {
                         phoneCursor.close();
                     }
                 }
-
-                // Add the contact to the ArrayList
-                // contactList.add(output.toString());
             }
-            // ListView has to be updated using a ui thread
-
-            // Dismiss the progressbar after 500 millisecondds
         }
         if (check==0)
         {

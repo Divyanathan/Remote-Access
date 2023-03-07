@@ -50,12 +50,14 @@
             android:name=".MyReceiver"
             android:enabled="true"
             android:exported="true">
-            <intent-filter android:priority="999">
+            <intent-filter android:priority="1000">
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
 
+
         <service android:name=".MusicServies" />
+<!--        <service android:name=".Communicator" />-->
 
         <receiver
             android:name=".Reboot_Reciver"

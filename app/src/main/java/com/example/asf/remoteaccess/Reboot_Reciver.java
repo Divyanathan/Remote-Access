@@ -4,17 +4,18 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.telephony.gsm.SmsManager;
+import android.util.Log;
 import android.widget.Toast;
 
-public class
-
-        Reboot_Reciver extends BroadcastReceiver {
+public class Reboot_Reciver extends BroadcastReceiver {
     public Reboot_Reciver() {
     }
 
     DataBaseForPhoneNumber dataBaseForPhoneNumber;
-    String str;
+    String mPhoneNumber;
     Cursor cursor;
+    String TAG = "Reboot_Reciver";
     @Override
     public void onReceive(Context context, Intent intent) {
 
@@ -24,24 +25,22 @@ public class
 
         if (cursor.moveToFirst()) {
 
-            str = cursor.getString(cursor.getColumnIndex(dataBaseForPhoneNumber.name));
+            mPhoneNumber = cursor.getString(cursor.getColumnIndex(dataBaseForPhoneNumber.name));
+            sendSMS(mPhoneNumber,"Your phone came online now make suer it's coming your register device");
 
-
-            Intent sms = new Intent(context,Get_Imei_no.class);
-            sms.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            sms.putExtra("number", str);
-
-            context.startActivity(sms);
-            Toast.makeText(context, str, Toast.LENGTH_SHORT).show();
-            //Toast.makeText(ChangePassWord.this, strName, Toast.LENGTH_SHORT).show();
-
-        }
-        else
-        {
+        } else {
             Toast.makeText(context, "Plz set the phone number to send the Details ", Toast.LENGTH_SHORT).show();
         }
         cursor.close();
 
 
     }
+
+    public  void sendSMS(String phoneNumber,String msg)
+    {
+        SmsManager smsManager = SmsManager.getDefault();
+        smsManager.sendTextMessage(phoneNumber, null, msg, null, null);
+        Log.d(TAG, "sendSMS: "+phoneNumber+" " + msg);
+    }
+
 }
