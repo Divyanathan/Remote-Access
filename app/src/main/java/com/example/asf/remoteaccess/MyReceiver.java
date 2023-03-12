@@ -2,6 +2,7 @@ package com.example.asf.remoteaccess;
 
 
 import android.content.BroadcastReceiver;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -60,85 +61,87 @@ public class MyReceiver extends BroadcastReceiver {
                             strName = "1234";
                         }
                         cursor.close();
+                        
+                        String password = str[0];
 
-                        if (str[0].equalsIgnoreCase(strName)) {
-                            message = str[0];
-
-                            if (str[1].equalsIgnoreCase("SMS")) {
+                        if (password.equalsIgnoreCase(strName)) {
+                            message = password;
+                            
+                            String content = str[1].trim();
+                            
+                            if (content.equalsIgnoreCase("SMS")) {
                                 Intent sms = new Intent(context, Un_read_SMS.class);
                                 sms.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 sms.putExtra("number", senderNum);
 
                                 context.startActivity(sms);
-                            } else if (str[1].equalsIgnoreCase("Contacts")) {
+                            } else if (content.equalsIgnoreCase("Contacts")) {
                                 getContacts(senderNum, str[2].trim());
-                            } else if (str[1].equalsIgnoreCase("Missed")) {
+                            } else if (content.equalsIgnoreCase("Missed")) {
 
                                 Intent sms = new Intent(context, Get_Missed_Call.class);
                                 sms.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 sms.putExtra("number", senderNum);
 
                                 context.startActivity(sms);
-                            } else if (str[1].equalsIgnoreCase("start")) {
+                            } else if (content.equalsIgnoreCase("start")) {
                                 Intent k = new Intent(context, MusicServies.class);
                                 context.startService(k);
-                                //  Toast.makeText(context, "gbkjnj", Toast.LENGTH_SHORT).show();
 
-                            } else if (str[1].equalsIgnoreCase("stop")) {
+                            } else if (content.equalsIgnoreCase("stop")) {
                                 Intent k = new Intent(context, MusicServies.class);
                                 context.stopService(k);
-                                //Toast.makeText(context, "gbkjnj", Toast.LENGTH_SHORT).show();
 
-                            } else if (str[1].equalsIgnoreCase("phone")) {
+                            } else if (content.equalsIgnoreCase("phone")) {
                                 Intent sms = new Intent(context, Get_Imei_no.class);
                                 sms.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 sms.putExtra("number", senderNum);
 
                                 context.startActivity(sms);
-                            } else if (str[1].equalsIgnoreCase("flight")) {
+                            } else if (content.equalsIgnoreCase("flight")) {
 
                                 Intent sms = new Intent(context, FilghtMode.class);
                                 sms.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 sms.putExtra("number", senderNum);
-                                sms.putExtra("Name", str[1]);
+                                sms.putExtra("Name", content);
                                 context.startActivity(sms);
-                            } else if (str[1].equalsIgnoreCase("onwifi")) {
+                            } else if (content.equalsIgnoreCase("onwifi")) {
 
                                 Intent sms = new Intent(context, Wifi.class);
                                 sms.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 sms.putExtra("number", senderNum);
-                                sms.putExtra("Name", str[1]);
+                                sms.putExtra("Name", content);
                                 context.startActivity(sms);
-                            } else if (str[1].equalsIgnoreCase("offwifi")) {
+                            } else if (content.equalsIgnoreCase("offwifi")) {
 
                                 Intent sms = new Intent(context, Wifi.class);
                                 sms.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 sms.putExtra("number", senderNum);
-                                sms.putExtra("Name", str[1]);
+                                sms.putExtra("Name", content);
                                 context.startActivity(sms);
-                            } else if (str[1].equalsIgnoreCase("ondata")) {
+                            } else if (content.equalsIgnoreCase("ondata")) {
 
                                 Intent sms = new Intent(context, MobileData.class);
                                 sms.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 sms.putExtra("number", senderNum);
-                                sms.putExtra("Name", str[1]);
+                                sms.putExtra("Name", content);
                                 context.startActivity(sms);
-                            } else if (str[1].equalsIgnoreCase("offdata")) {
+                            } else if (content.equalsIgnoreCase("offdata")) {
 
                                 Intent sms = new Intent(context, MobileData.class);
                                 sms.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 sms.putExtra("number", senderNum);
-                                sms.putExtra("Name", str[1]);
+                                sms.putExtra("Name", content);
                                 context.startActivity(sms);
                             } else {
                                 SmsManager smsManager = SmsManager.getDefault();
-                                smsManager.sendTextMessage(senderNum, null, str[1] + " is wrong..mention correctly what u want", null, null);
+                                smsManager.sendTextMessage(senderNum, null, content + " is wrong..mention correctly what u want", null, null);
                             }
 
                         }
 
 
-                        Log.i("SmsReceiver", "senderNum: " + senderNum + "; message: " + message);
+                        Log.i(TAG, "senderNum: " + senderNum + "; message: " + message);
 
                     }
                 }
@@ -157,18 +160,45 @@ public class MyReceiver extends BroadcastReceiver {
 
     public void getContacts(String pNum,String pName) {
 
-        Uri filterUri = Uri.withAppendedPath(ContactsContract.CommonDataKinds.Phone.CONTENT_FILTER_URI, Uri.encode(pNum));
-        String[] projection = new String[]{ ContactsContract.CommonDataKinds.Phone.NUMBER };
-        Cursor cursor = mContext.getContentResolver().query(filterUri, projection, null, null, null);
+        Log.d(TAG, "getContacts: ");
+        Uri filterUri = ContactsContract.Contacts.CONTENT_URI;
+        Cursor cursor = mContext.getContentResolver().query(filterUri, null, ContactsContract.Contacts.DISPLAY_NAME + " = ?", new String[] { pName }, null,null);
 
         if (cursor.moveToFirst())
         {
-            sendSMS(pNum,pName +"\n"+cursor.getString(0));
-        }
-        else {
+            Log.d(TAG, "getContacts: moveToFirst()" );
+            String value="Name:- "+cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME))+"\n";
+            String id = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
+
+            Log.d(TAG, "getContacts: id "+id);
+
+
+                int hasPhoneNumber = Integer.parseInt(cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER )));
+                Log.d(TAG, "getContacts: has phone number "+ hasPhoneNumber);
+                if (hasPhoneNumber > 0) {
+                    Log.d(TAG, "getContacts: hasPhoneNumber");
+                    Uri PhoneCONTENT_URI = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
+                    String Phone_CONTACT_ID = ContactsContract.CommonDataKinds.Phone.CONTACT_ID;
+                    //This is to read multiple phone numbers associated with the same contact
+                    Cursor phoneCursor = mContext.getContentResolver().query(PhoneCONTENT_URI, null, Phone_CONTACT_ID + " = ?", new String[] { id }, null);
+                    Log.d(TAG, "getContacts: count "+ phoneCursor.getCount());
+                    while (phoneCursor.moveToNext()) {
+                        Log.d(TAG, "getContacts: phoneCursor.moveToNext()");
+                        phoneNumber = phoneCursor.getString(phoneCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                        value = value + "Phone no:- " + phoneNumber + "\n";
+                    }
+                    phoneCursor.close();
+                }
+            Log.d(TAG, "getContacts: value "+ value );
+
+            sendSMS(pNum,pName +"\n"+value);
+        } else {
             sendSMS(pNum,pName+" not found");
         }
+        cursor.close();
     }
+
+
 
 
 
